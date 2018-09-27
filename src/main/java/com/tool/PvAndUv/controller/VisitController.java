@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class VisitController {
 
-
-
     @RequestMapping(value="/hello",method = RequestMethod.GET)
     public String sayHello(){
         return "hello";
@@ -25,5 +23,10 @@ public class VisitController {
     @RequestMapping(value="/test",method=RequestMethod.GET)
     public String sayTest(){
         return "test";
+    }
+
+    @RequestMapping(value="/calc",method=RequestMethod.GET)
+    public String calcUrl(){
+        return "";
     }
 }

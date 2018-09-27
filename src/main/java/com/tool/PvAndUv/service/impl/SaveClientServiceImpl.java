@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * author:liman
@@ -25,9 +25,12 @@ public class SaveClientServiceImpl implements SaveClientService {
     @Override
     @Scheduled(fixedRate = 60000)
     public void saveClient() {
-        CopyOnWriteArrayList<Client> clientList = VisitorsData.getClientList();
-        for(Client client:clientList){
-            clientRepository.save(client);
+        ConcurrentLinkedQueue<Client> clientList = VisitorsData.getClientList();
+        for(int i=0;i<1000;i++){
+            if(clientList.isEmpty()){
+                break;
+            }
+            clientRepository.save(clientList.poll());
         }
     }
 }

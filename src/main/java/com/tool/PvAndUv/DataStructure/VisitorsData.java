@@ -1,6 +1,8 @@
 package com.tool.PvAndUv.DataStructure;
 
 import com.tool.PvAndUv.Entity.Client;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -13,14 +15,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class VisitorsData {
 
-    private static CopyOnWriteArrayList<Client> clientList = new CopyOnWriteArrayList<Client>();
+    /**
+     * 采用队列，每保存一个client对象就是出队列
+     */
+    private static ConcurrentLinkedQueue<Client> clientQueue = new ConcurrentLinkedQueue<Client>();
 
     public synchronized static void addClient(Client client){
-        clientList.add(client);
+        clientQueue.offer(client);
     }
 
-    public static CopyOnWriteArrayList<Client> getClientList(){
-        return clientList;
+    public static ConcurrentLinkedQueue<Client> getClientList(){
+        return clientQueue;
     }
 
 }

@@ -22,8 +22,6 @@ import java.util.Map;
  * 过滤器获取请求和URL
  */
 @Component
-//@ServletComponentScan
-//@WebFilter(urlPatterns = "/*", filterName = "getParamersFilter")
 public class GetParamersFilter implements HandlerInterceptor {
     /**
      * 在请求处理之前进行调用，该方法只有返回true才能继续，
@@ -42,7 +40,7 @@ public class GetParamersFilter implements HandlerInterceptor {
         String url = request.getRequestURL().toString();
         UrlData.addUrlCount(url);
 
-        //2、加入客户端
+        //2、加入客户端队列
         Client client = getProcess(request);
         VisitorsData.addClient(client);
         return true;
@@ -85,30 +83,22 @@ public class GetParamersFilter implements HandlerInterceptor {
      * @return
      */
     private Client getProcess(HttpServletRequest request) {
-        System.out.println("========GET PROCESS=======");
-        System.out.println(request.getRequestURL());
-
         Map<String, String[]> requestMsg = request.getParameterMap();
         Enumeration<String> requestHeader = request.getHeaderNames();
         Client client = new Client();
 
-        System.out.println("=========Header=========");
         while (requestHeader.hasMoreElements()) {
-            String headerKey = requestHeader.nextElement().toString();
+            String headerKey = requestHeader.nextElement();
             if(headerKey.equals("host")){
                 client.setHost(request.getHeader(headerKey));
             }
-            System.out.println("headerKey = " + headerKey + "; value=" + request.getHeader(headerKey));
         }
 
-        System.out.println("--------parameter--------");
         for (Map.Entry<String, String[]> entry : requestMsg.entrySet()) {
             for (int i = 0; i < entry.getValue().length; i++) {
                 System.out.println(entry.getKey() + ":" + entry.getValue()[i]);
             }
         }
-
-        System.out.println(request.getRemoteAddr()+"======="+request.getRemoteHost()+"=========");
 
         client.setAccessTime(String.valueOf(System.currentTimeMillis()));
         client.setIpAddress(request.getRemoteAddr());
